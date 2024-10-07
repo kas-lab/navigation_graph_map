@@ -1,0 +1,9 @@
+repositories:
+  ros2_planning_system:
+    type: git
+    url: https://github.com/PlanSys2/ros2_planning_system.git
+    version: e2fd96e
+  rosa:
+    type: git
+    url: https://github.com/kas-lab/rosa.git
+    version: main
