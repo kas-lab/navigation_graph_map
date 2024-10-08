@@ -95,7 +95,7 @@ namespace navigation_task_plan
     // auto wp_to_navigate = get_waypoint(waypoint);
 
     nav2_msgs::action::NavigateToPose::Goal navigation_goal;
-    navigation_goal.pose = get_waypoint(get_arguments()[2]);
+    navigation_goal.pose = get_waypoint(get_arguments()[1]);
     // geometry_msgs::msg::PoseStamped goal_pos;
     dist_to_move_ = getDistance(navigation_goal.pose.pose, current_pos_);
 
@@ -118,6 +118,14 @@ namespace navigation_task_plan
       navigate_cli_->async_send_goal(navigation_goal, send_goal_options);
 
     return ActionExecutorClient::on_activate(previous_state);
+  }
+
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  Move::on_deactivate(const rclcpp_lifecycle::State & previous_state)
+  {
+    navigate_cli_->async_cancel_all_goals();
+
+   return ActionExecutorClient::on_deactivate(previous_state);
   }
 }
 

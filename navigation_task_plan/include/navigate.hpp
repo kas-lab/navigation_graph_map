@@ -14,10 +14,7 @@
 #ifndef NAVIGATION_GRAPH__NAVIGATE_CONTROLLER_HPP_
 #define NAVIGATION_GRAPH__NAVIGATE_CONTROLLER_HPP_
 
-// #include <algorithm>
-
 #include "rclcpp/rclcpp.hpp"
-// #include "std_msgs/msg/string.hpp"
 
 #include "plansys2_domain_expert/DomainExpertClient.hpp"
 #include "plansys2_executor/ExecutorClient.hpp"
@@ -48,10 +45,8 @@ protected:
   bool first_iteration_ = true;
   void execute_plan();
 
-  // rclcpp::Time _start_time;
-
   void step();
-  // void finish_controlling();
+  void finish_controlling();
 };
 
 }  // namespace navigation_task_plan

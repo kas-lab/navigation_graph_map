@@ -6,7 +6,7 @@
   )
 
   (:init
-    (robot_at wp1)
+    (robot_at wpf)
 
     (connected wp1 wp2)
     (connected wp2 wp3)

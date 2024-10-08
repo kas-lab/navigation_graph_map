@@ -74,11 +74,10 @@ void NavigationController::execute_plan(){
   executor_client_->start_plan_execution(plan.value());
 }
 
-// void NavigationController::finish_controlling(){
-//   this->step_timer_->cancel();
-//   this->executor_client_->cancel_plan_execution();
-//   this->time_limit_timer_->cancel();
-// }
+void NavigationController::finish_controlling(){
+  this->step_timer_->cancel();
+  this->executor_client_->cancel_plan_execution();
+}
 
 void NavigationController::step(){
   if (first_iteration_){

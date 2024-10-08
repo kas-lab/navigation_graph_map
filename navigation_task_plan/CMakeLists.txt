@@ -31,10 +31,7 @@ add_executable(action_move src/navigation_task_plan/action_move.cpp)
 ament_target_dependencies(action_move ${dependencies})
 
 add_executable(navigate src/navigate.cpp)
-target_include_directories(navigate PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_compile_features(navigate PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(navigate ${dependencies})
 
 install(TARGETS
   navigate

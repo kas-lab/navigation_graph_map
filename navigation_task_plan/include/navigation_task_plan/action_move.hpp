@@ -39,9 +39,6 @@ public:
   virtual ~Move();
 
 private:
-  // bool armed_ = false;
-  // bool guided_ = false;
-  // std::string mode_;
   geometry_msgs::msg::Pose current_pos_;
 
   rclcpp::CallbackGroup::SharedPtr callback_group_action_client_;
@@ -54,7 +51,6 @@ private:
 
   double getDistance(const geometry_msgs::msg::Pose & pos1, const geometry_msgs::msg::Pose & pos2);
   geometry_msgs::msg::PoseStamped get_waypoint(std::string waypoint);
-  // void navigate_to_waypoint(std::string waypoint);
 
   void current_pos_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
 
@@ -63,6 +59,9 @@ private:
 
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_activate(const rclcpp_lifecycle::State & previous_state);
+
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_deactivate(const rclcpp_lifecycle::State & previous_state);
 
   void do_work() {};
 };
