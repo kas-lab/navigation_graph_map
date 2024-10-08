@@ -2,12 +2,13 @@
   (:domain navigation )
 
   (:objects
-    wp1 wp2 wp3 wp4 wpf - waypoint
+    wp_initial wp1 wp2 wp3 wp4 wpf - waypoint
   )
 
   (:init
-    (robot_at wpf)
+    (robot_at wp_initial)
 
+    (connected wp_initial wp1)
     (connected wp1 wp2)
     (connected wp2 wp3)
     (connected wp3 wp4)

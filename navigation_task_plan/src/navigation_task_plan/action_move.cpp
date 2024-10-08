@@ -21,7 +21,7 @@ namespace navigation_task_plan
 
   Move::Move(const std::string & node_name,
     const std::chrono::nanoseconds & rate)
-  : plansys2::ActionExecutorClient(node_name, rate)
+  : rosa_task_plan_plansys::RosaAction(node_name, rate)
   {
   }
 
@@ -52,7 +52,7 @@ namespace navigation_task_plan
     this->declare_parameter("wp4", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
     this->declare_parameter("wpf", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
 
-    return ActionExecutorClient::on_configure(previous_state);
+    return rosa_task_plan_plansys::RosaAction::on_configure(previous_state);
   }
 
   void Move::current_pos_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg)
@@ -117,7 +117,7 @@ namespace navigation_task_plan
     future_navigation_goal_handle_ =
       navigate_cli_->async_send_goal(navigation_goal, send_goal_options);
 
-    return ActionExecutorClient::on_activate(previous_state);
+    return rosa_task_plan_plansys::RosaAction::on_activate(previous_state);
   }
 
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
@@ -125,7 +125,7 @@ namespace navigation_task_plan
   {
     navigate_cli_->async_cancel_all_goals();
 
-   return ActionExecutorClient::on_deactivate(previous_state);
+   return rosa_task_plan_plansys::RosaAction::on_deactivate(previous_state);
   }
 }
 

@@ -40,3 +40,38 @@ In another terminal:
 ```Bash
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
 ```
+
+```Bash
+ros2 launch navigation_task_plan navigate_task_plan.launch.py
+```
+
+### ROSA
+
+In another terminal:
+```Bash
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+```
+
+```Bash
+typedb server
+```
+
+In another terminal:
+```Bash
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+```
+
+```Bash
+ros2 topic pub diagnostics diagnostic_msgs/msg/DiagnosticArray
+```
+
+In another terminal:
+
+Publish battery level:
+```Bash
+ros2 topic pub /diagnostics diagnostic_msgs/msg/DiagnosticArray {status:['{message: "QA status", values:[{key: battery, value: 0.5}]}']}
+```
+
+```Bash
+ros2 service call /rosa_kb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch', query: 'match \$b isa QualityAttribute, has attribute-name \"battery\"; fetch \$b:attribute;'}"
+```

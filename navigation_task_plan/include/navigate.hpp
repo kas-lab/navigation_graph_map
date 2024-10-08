@@ -21,6 +21,7 @@
 #include "plansys2_planner/PlannerClient.hpp"
 #include "plansys2_problem_expert/ProblemExpertClient.hpp"
 
+#include "rosa_task_plan_plansys/rosa_plansys_controller.hpp"
 // #include "navigation_task_plan/visibility_control.h"
 
 namespace navigation_task_plan

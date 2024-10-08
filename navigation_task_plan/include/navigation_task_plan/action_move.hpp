@@ -22,6 +22,8 @@
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 
+#include "rosa_task_plan_plansys/rosa_action.hpp"
+
 namespace navigation_task_plan
 {
 
@@ -30,7 +32,7 @@ using NavigationGoalHandle =
 using NavigationFeedback =
     const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback>;
 
-class Move : public plansys2::ActionExecutorClient
+class Move : public rosa_task_plan_plansys::RosaAction
 {
 public:
   Move(const std::string & node_name,

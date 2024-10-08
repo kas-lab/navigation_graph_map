@@ -41,20 +41,21 @@ def generate_launch_description():
             }.items()
         )
 
-    waypoints_file = navigation_task_plan_path + '/config/waypoints.yaml'
     navigation_controller_node = Node(
-        package='navigation_task_plan',
-        executable='navigate',
+        package='rosa_task_plan_plansys',
+        executable='rosa_plansys_controller_node',
+        parameters=[{'rosa_actions': ['move']}]
     )
 
+    waypoints_file = navigation_task_plan_path + '/config/waypoints.yaml'
     pddl_move_action_node = Node(
         package='navigation_task_plan',
         executable='action_move',
-        parameters=[{'action_name': 'move'}]
+        parameters=[{'action_name': 'move'}, waypoints_file]
     )
 
     return LaunchDescription([
         plansys2_bringup,
         navigation_controller_node,
-        # pddl_move_action_node,
+        pddl_move_action_node,
     ])
