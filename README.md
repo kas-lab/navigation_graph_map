@@ -5,6 +5,8 @@ Based on the use case from [Software architecture and task plan co-adaptation fo
 
 ## Install
 
+This step is only needed if you want to make changes to the project, if you just want to run it skip to [Running](##Running)
+
 ```Bash
 mkdir -p ~/navigation_ws/src
 cd ~/navigation_ws/src
@@ -13,6 +15,7 @@ git clone https://github.com/kas-lab/navigation_graph_map.git
 
 ### Docker setup
 
+This step is only needed if you want to make changes to the project, if you just want to run it skip to [Running](##Running)
 ```Bash
 cd ~/navigation_ws/src/navigation_graph_map/
 docker build -t navigation .
@@ -24,7 +27,7 @@ docker build -t navigation .
 
 Start docker container:
 ```Bash
-docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro ghcr.io/kas-lab/navigation_graph_map:main
 ```
 
 Then run:
@@ -38,7 +41,7 @@ ros2 launch navigation_simulation simulation.launch.py
 
 In another terminal:
 ```Bash
-docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro ghcr.io/kas-lab/navigation_graph_map:main
 ```
 
 ```Bash
@@ -49,7 +52,7 @@ ros2 launch navigation_task_plan navigate_task_plan.launch.py
 
 In another terminal:
 ```Bash
-docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro ghcr.io/kas-lab/navigation_graph_map:main
 ```
 
 Start typedb server
@@ -65,7 +68,7 @@ ros2 launch navigation_rosa navigation_rosa.launch.py
 ### Trigger adaptation
 In another terminal:
 ```Bash
-docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro ghcr.io/kas-lab/navigation_graph_map:main
 ```
 
 Publish battery level:
