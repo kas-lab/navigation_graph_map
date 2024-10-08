@@ -52,25 +52,38 @@ In another terminal:
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
 ```
 
+Start typedb server
 ```Bash
-typedb server
+typedb server &
 ```
 
+In the same terminal launch rosa:
+```Bash
+ros2 launch navigation_rosa navigation_rosa.launch.py
+```
+
+### Trigger adaptation
 In another terminal:
 ```Bash
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
 ```
 
-```Bash
-ros2 topic pub diagnostics diagnostic_msgs/msg/DiagnosticArray
-```
-
-In another terminal:
-
 Publish battery level:
 ```Bash
 ros2 topic pub /diagnostics diagnostic_msgs/msg/DiagnosticArray {status:['{message: "QA status", values:[{key: battery, value: 0.5}]}']}
 ```
+
+### Check adaptation
+
+```Bash
+ros2 param get /controller_server FollowPath.max_vel_x
+```
+
+```Bash
+ros2 param get /controller_server FollowPath.max_vel_theta
+```
+
+### Query example
 
 ```Bash
 ros2 service call /rosa_kb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch', query: 'match \$b isa QualityAttribute, has attribute-name \"battery\"; fetch \$b:attribute;'}"
