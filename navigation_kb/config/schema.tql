@@ -1,0 +1,97 @@
+define 
+
+# Base elements
+name sub attribute,
+    abstract,
+    value string;
+
+physical_thing sub entity,
+    plays pose2d:physical_thing;
+
+# Pose elements
+position sub attribute,
+    abstract,
+    value double;
+
+x sub position;
+y sub position;
+
+orientation sub attribute,
+    abstract,
+    value double;
+
+time sub attribute,
+    value datetime;
+
+theta sub orientation;
+
+pose2d sub relation,
+    owns x,
+    owns y,
+    owns theta,
+    relates physical_thing;
+
+current_pose sub pose2d,
+    owns time;
+
+previous_pose sub pose2d,
+    owns time;
+
+# Map elements
+room-name sub name,
+    value string;
+
+door-open sub attribute,
+    value boolean;
+    
+room sub physical_thing,
+    owns room-name @key,
+    plays door:room,
+    plays path:room,
+    plays expected-location:room,
+    plays delivery-location:room;   
+
+door sub relation,
+    owns door-open,
+    relates room;
+
+path sub relation,
+    relates room;
+
+rule valid-path:
+when {
+    $d (room:$r1, room:$r2) isa door;
+    not {
+        $d has door-open false;
+    };
+} then {
+    (room:$r1, room:$r2) isa path;
+};
+
+rule valid-path-transitive:
+when {
+    (room:$r1, room:$r2) isa path;
+    (room:$r2, room:$r3) isa path; 
+} then {
+    (room:$r1, room:$r3) isa path;
+};
+
+# Object elements
+expected-location sub relation,
+    relates room,
+    relates object;
+
+delivery-location sub relation,
+    relates room,
+    relates object;
+
+object-name sub name,
+    value string;
+
+object sub physical_thing,
+    owns object-name @key,
+    plays expected-location:object,
+    plays delivery-location:object;
+    
+
+

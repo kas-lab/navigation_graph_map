@@ -1,0 +1,22 @@
+match
+$o isa object, has object-name "cup";
+(object:$o, room:$r) isa delivery-location;
+fetch
+$r: room-name;
+
+match
+$o isa object, has object-name "cup";
+(object:$o, room:$r) isa delivery-location;
+$rg isa room, has room-name "garage";
+$path (room:$rg, room:$r) isa path;
+get $path;
+
+
+match
+$o isa object, has object-name "cup";
+(object:$o, room:$r) isa delivery-location;
+$rg isa room, has room-name "garage";
+$path (room:$rg, room:$r) isa path;
+$pose (physical_thing:$r) isa pose2d;
+fetch
+$pose:x, y, theta;
