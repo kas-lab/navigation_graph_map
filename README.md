@@ -88,6 +88,19 @@ ros2 param get /controller_server FollowPath.max_vel_theta
 
 ### Query example
 
+ROSA query:
 ```Bash
 ros2 service call /rosa_kb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch', query: 'match \$b isa QualityAttribute, has attribute-name \"battery\"; fetch \$b:attribute;'}"
+```
+
+Navigation kb query:
+```Bash
+ros2 service call /rosa_kb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch', query: 'match
+\$o isa object, has object-name \"cup\";
+(object:\$o, room:\$r) isa delivery-location;
+\$rg isa room, has room-name \"garage\";
+\$path (room:\$rg, room:\$r) isa path;
+\$pose (physical_thing:\$r) isa pose2d;
+fetch
+\$pose:x, y, theta;'}"
 ```
