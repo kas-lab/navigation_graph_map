@@ -1,22 +1,47 @@
 match
-$o isa object, has object-name "cup";
-(object:$o, room:$r) isa delivery-location;
+$o isa item, has item-name "cup";
+(item:$o, room:$r) isa delivery-location;
 fetch
 $r: room-name;
 
 match
-$o isa object, has object-name "cup";
-(object:$o, room:$r) isa delivery-location;
+$o isa item, has item-name "cup";
+(item:$o, room:$r) isa delivery-location;
 $rg isa room, has room-name "garage";
 $path (room:$rg, room:$r) isa path;
 get $path;
 
 
 match
-$o isa object, has object-name "cup";
-(object:$o, room:$r) isa delivery-location;
+$o isa item, has item-name "cup";
+(item:$o, room:$r) isa delivery-location;
 $rg isa room, has room-name "garage";
 $path (room:$rg, room:$r) isa path;
 $pose (physical_thing:$r) isa pose2d;
+fetch
+$pose:x, y, theta;
+
+match 
+$i isa item;
+fetch
+$i: item-name;
+
+match
+$item isa item, has item-name $item-name;
+(item:$item, room:$room) isa delivery-location;
+$room has room-name $room-name;
+fetch
+$item-name; $room-name; 
+
+match
+$path (room:$room1, room:$room2) isa path;
+$room1 has room-name $room1-name;
+$room2 has room-name $room2-name;
+fetch
+$room1-name; $room2-name;
+
+match
+$room isa room, has room-name "garage";
+$pose (physical_thing:$room) isa pose2d;
 fetch
 $pose:x, y, theta;

@@ -1,4 +1,4 @@
-define 
+define
 
 # Base elements
 name sub attribute,
@@ -43,13 +43,13 @@ room-name sub name,
 
 door-open sub attribute,
     value boolean;
-    
+
 room sub physical_thing,
     owns room-name @key,
     plays door:room,
     plays path:room,
     plays expected-location:room,
-    plays delivery-location:room;   
+    plays delivery-location:room;
 
 door sub relation,
     owns door-open,
@@ -71,27 +71,24 @@ when {
 rule valid-path-transitive:
 when {
     (room:$r1, room:$r2) isa path;
-    (room:$r2, room:$r3) isa path; 
+    (room:$r2, room:$r3) isa path;
 } then {
     (room:$r1, room:$r3) isa path;
 };
 
-# Object elements
+# item elements
 expected-location sub relation,
     relates room,
-    relates object;
+    relates item;
 
 delivery-location sub relation,
     relates room,
-    relates object;
+    relates item;
 
-object-name sub name,
+item-name sub name,
     value string;
 
-object sub physical_thing,
-    owns object-name @key,
-    plays expected-location:object,
-    plays delivery-location:object;
-    
-
-
+item sub physical_thing,
+    owns item-name @key,
+    plays expected-location:item,
+    plays delivery-location:item;

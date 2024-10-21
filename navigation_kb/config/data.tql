@@ -1,4 +1,4 @@
-insert 
+insert
 
 ## Rooms' definition
 $kitchen isa room, has room-name "kitchen";
@@ -28,21 +28,20 @@ $b2_ba_door (room:$bedroom2, room:$bathroom) isa door;
 $t_l_door (room:$toilet, room:$livingroom) isa door;
 $g_l_door (room:$garage, room:$livingroom) isa door;
 
-## Objects' definition
-$cup isa object, has object-name "cup";
-$toilet_paper isa object, has object-name "toilet paper";
-$remote_controller isa object, has object-name "remote controller";
-$pillow isa object, has object-name "pillow";
+## items' definition
+$cup isa item, has item-name "cup";
+$toilet_paper isa item, has item-name "toilet_paper";
+$remote_controller isa item, has item-name "remote_controller";
+$pillow isa item, has item-name "pillow";
 
-(object:$cup, room:$kitchen) isa expected-location;
-(object:$toilet_paper, room:$bathroom) isa expected-location;
-(object:$toilet_paper, room:$toilet) isa expected-location;
-(object:$remote_controller, room:$livingroom) isa expected-location;
-(object:$pillow, room:$bedroom) isa expected-location;
-(object:$pillow, room:$bedroom2) isa expected-location;
+(item:$cup, room:$kitchen) isa expected-location;
+(item:$toilet_paper, room:$bathroom) isa expected-location;
+(item:$toilet_paper, room:$toilet) isa expected-location;
+(item:$remote_controller, room:$livingroom) isa expected-location;
+(item:$pillow, room:$bedroom) isa expected-location;
+(item:$pillow, room:$bedroom2) isa expected-location;
 
-(object:$cup, room:$kitchen) isa delivery-location;
-(object:$toilet_paper, room:$bathroom) isa delivery-location;
-(object:$remote_controller, room:$livingroom) isa delivery-location;
-(object:$pillow, room:$bedroom) isa delivery-location;
-
+(item:$cup, room:$kitchen) isa delivery-location;
+(item:$toilet_paper, room:$bathroom) isa delivery-location;
+(item:$remote_controller, room:$livingroom) isa delivery-location;
+(item:$pillow, room:$bedroom) isa delivery-location;
