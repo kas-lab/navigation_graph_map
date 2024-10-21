@@ -16,6 +16,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+#include "ros_typedb_msgs/srv/query.hpp"
+
 #include "plansys2_domain_expert/DomainExpertClient.hpp"
 #include "plansys2_executor/ExecutorClient.hpp"
 #include "plansys2_planner/PlannerClient.hpp"
@@ -43,11 +45,19 @@ protected:
   std::shared_ptr<plansys2::ProblemExpertClient> problem_expert_;
   std::shared_ptr<plansys2::ExecutorClient> executor_client_;
 
+  rclcpp::CallbackGroup::SharedPtr ros_typedb_cb_group_;
+  rclcpp::Client<ros_typedb_msgs::srv::Query>::SharedPtr typedb_query_cli_;
+
   bool first_iteration_ = true;
   void execute_plan();
 
   void step();
   void finish_controlling();
+
+  void fetch_items();
+  void fetch_rooms();
+  void fetch_paths();
+  void fetch_delivery_locations();
 };
 
 }  // namespace navigation_task_plan

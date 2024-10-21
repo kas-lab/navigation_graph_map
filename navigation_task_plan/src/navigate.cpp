@@ -39,6 +39,13 @@ namespace navigation_task_plan
   step_timer_ = this->create_wall_timer(
     1s, std::bind(&NavigationController::step, this), step_timer_cb_group_);
 
+  ros_typedb_cb_group_ = create_callback_group(
+    rclcpp::CallbackGroupType::MutuallyExclusive);
+
+  typedb_query_cli_ = this->create_client<ros_typedb_msgs::srv::Query>(
+      "ros_typedb/query",
+      rmw_qos_profile_services_default,
+      ros_typedb_cb_group_);
 }
 
 NavigationController::~NavigationController()
@@ -47,6 +54,10 @@ NavigationController::~NavigationController()
 
 void NavigationController::execute_plan(){
   // Compute the plan
+  this->fetch_items();
+  this->fetch_rooms();
+  this->fetch_paths();
+  this->fetch_delivery_locations();
   auto domain = domain_expert_->getDomain();
   auto problem = problem_expert_->getProblem();
   auto plan = planner_client_->getPlan(domain, problem);
@@ -114,6 +125,148 @@ void NavigationController::step(){
     RCLCPP_INFO(this->get_logger(), feedback_str_.c_str());
   }
 }
+
+void NavigationController::fetch_items(){
+  RCLCPP_INFO(this->get_logger(), " Fecthing items");
+  if(!typedb_query_cli_->service_is_ready()){
+    return;
+  }
+
+  auto request = std::make_shared<ros_typedb_msgs::srv::Query::Request>();
+  request->query_type = "fetch";
+  request->query = "match $item isa item; fetch $item: item-name;";
+
+  auto typedb_query_result_ = typedb_query_cli_->async_send_request(request);
+
+  // Wait for the result.
+  if (typedb_query_result_.wait_for(1s) != std::future_status::ready) {
+    return;
+  }
+
+  auto result_ = typedb_query_result_.get();
+  if(!result_->success){
+    return;
+  }
+
+  for (const auto& result: result_->results) {
+    for (const auto& attribute: result.attributes) {
+      if (attribute.label == "item-name") {
+        problem_expert_->addInstance(plansys2::Instance(attribute.value.string_value, "item"));
+      }
+    }
+  }
+}
+
+void NavigationController::fetch_rooms(){
+  if(!typedb_query_cli_->service_is_ready()){
+    return;
+  }
+
+  auto request = std::make_shared<ros_typedb_msgs::srv::Query::Request>();
+  request->query_type = "fetch";
+  request->query = "match $room isa room; fetch $room: room-name;";
+
+  auto typedb_query_result_ = typedb_query_cli_->async_send_request(request);
+
+  // Wait for the result.
+  if (typedb_query_result_.wait_for(1s) != std::future_status::ready) {
+    return;
+  }
+
+  auto result_ = typedb_query_result_.get();
+  if(!result_->success){
+    return;
+  }
+
+  for (const auto& result: result_->results) {
+    for (const auto& attribute: result.attributes) {
+      if (attribute.label == "room-name") {
+        problem_expert_->addInstance(plansys2::Instance(attribute.value.string_value, "room"));
+      }
+    }
+  }
+}
+
+void NavigationController::fetch_paths() {
+  if(!typedb_query_cli_->service_is_ready()){
+    return;
+  }
+
+  auto request = std::make_shared<ros_typedb_msgs::srv::Query::Request>();
+  request->query_type = "fetch";
+  request->query = "match"
+    "$path (room:$room1, room:$room2) isa path;"
+    "$room1 has room-name $room1-name;"
+    "$room2 has room-name $room2-name;"
+    "fetch"
+    "$room1-name; $room2-name;";
+
+  auto typedb_query_result_ = typedb_query_cli_->async_send_request(request);
+
+  // Wait for the result.
+  if (typedb_query_result_.wait_for(1s) != std::future_status::ready) {
+    return;
+  }
+
+  auto result_ = typedb_query_result_.get();
+  if(!result_->success){
+    return;
+  }
+
+  for (const auto& result: result_->results) {
+    std::string room1_name;
+    std::string room2_name;
+    for (const auto& attribute: result.attributes) {
+      if (attribute.name == "room1-name") {
+        room1_name = attribute.value.string_value;
+      } else if (attribute.name == "room2-name") {
+        room2_name = attribute.value.string_value;
+      }
+    }
+    auto predicate = "(path " + room1_name + " " + room2_name + ")";
+    problem_expert_->addPredicate(plansys2::Predicate(predicate));
+  }
+}
+
+void NavigationController::fetch_delivery_locations() {
+  if(!typedb_query_cli_->service_is_ready()){
+    return;
+  }
+
+  auto request = std::make_shared<ros_typedb_msgs::srv::Query::Request>();
+  request->query_type = "fetch";
+  request->query = "match $item isa item, has item-name $item-name; "
+    "(item:$item, room:$room) isa delivery-location;"
+    "$room has room-name $room-name;"
+    "fetch $item-name; $room-name;";
+
+  auto typedb_query_result_ = typedb_query_cli_->async_send_request(request);
+
+  // Wait for the result.
+  if (typedb_query_result_.wait_for(1s) != std::future_status::ready) {
+    return;
+  }
+
+  auto result_ = typedb_query_result_.get();
+  if(!result_->success){
+    return;
+  }
+
+  for (const auto& result: result_->results) {
+    std::string item_name;
+    std::string room_name;
+    for (const auto& attribute: result.attributes) {
+      if (attribute.label == "item-name") {
+        item_name = attribute.value.string_value;
+      } else if (attribute.label == "room-name") {
+        room_name = attribute.value.string_value;
+      }
+    }
+    auto predicate = "(item_delivery_location " + item_name + " " + room_name + ")";
+    problem_expert_->addPredicate(plansys2::Predicate(predicate));
+  }
+}
+
 }  // namespace
 
 int main(int argc, char ** argv)

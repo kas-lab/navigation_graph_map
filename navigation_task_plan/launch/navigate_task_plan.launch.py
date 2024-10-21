@@ -33,25 +33,24 @@ def generate_launch_description():
                 'plansys2_bringup_launch_distributed.py')),
             launch_arguments={
                 'model_file':
-                    navigation_task_plan_path + '/pddl/domain.pddl',
+                    navigation_task_plan_path + '/pddl/domain_place.pddl',
                 'problem_file':
-                    navigation_task_plan_path + '/pddl/problem.pddl',
+                    navigation_task_plan_path + '/pddl/problem_place.pddl',
                 # 'params_file':
                 #     navigation_task_plan_path + '/config/plansys2_params.yaml',
             }.items()
         )
 
     navigation_controller_node = Node(
-        package='rosa_task_plan_plansys',
-        executable='rosa_plansys_controller_node',
+        package='navigation_task_plan',
+        executable='navigate',
         parameters=[{'rosa_actions': ['move']}]
     )
 
-    waypoints_file = navigation_task_plan_path + '/config/waypoints.yaml'
     pddl_move_action_node = Node(
         package='navigation_task_plan',
         executable='action_move',
-        parameters=[{'action_name': 'move'}, waypoints_file]
+        parameters=[{'action_name': 'move'}]
     )
 
     return LaunchDescription([

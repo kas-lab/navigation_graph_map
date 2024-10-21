@@ -23,6 +23,7 @@
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 
 #include "rosa_task_plan_plansys/rosa_action.hpp"
+#include "ros_typedb_msgs/srv/query.hpp"
 
 namespace navigation_task_plan
 {
@@ -49,10 +50,13 @@ private:
   std::shared_future<NavigationGoalHandle::SharedPtr> future_navigation_goal_handle_;
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pos_sub_;
 
+  rclcpp::CallbackGroup::SharedPtr ros_typedb_cb_group_;
+  rclcpp::Client<ros_typedb_msgs::srv::Query>::SharedPtr typedb_query_cli_;
+
   double dist_to_move_;
 
   double getDistance(const geometry_msgs::msg::Pose & pos1, const geometry_msgs::msg::Pose & pos2);
-  geometry_msgs::msg::PoseStamped get_waypoint(std::string waypoint);
+  std::optional<geometry_msgs::msg::PoseStamped> fetch_pose(std::string room_name);
 
   void current_pos_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
 

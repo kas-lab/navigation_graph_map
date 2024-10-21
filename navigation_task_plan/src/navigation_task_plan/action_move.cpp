@@ -46,11 +46,13 @@ namespace navigation_task_plan
      10,
      std::bind(&Move::current_pos_callback, this, _1));
 
-    this->declare_parameter("wp1", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
-    this->declare_parameter("wp2", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
-    this->declare_parameter("wp3", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
-    this->declare_parameter("wp4", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
-    this->declare_parameter("wpf", rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY);
+    ros_typedb_cb_group_ = create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive);
+
+    typedb_query_cli_ = this->create_client<ros_typedb_msgs::srv::Query>(
+        "ros_typedb/query",
+        rmw_qos_profile_services_default,
+        ros_typedb_cb_group_);
 
     return rosa_task_plan_plansys::RosaAction::on_configure(previous_state);
   }
@@ -67,17 +69,44 @@ namespace navigation_task_plan
       (pos1.position.y - pos2.position.y) * (pos1.position.y - pos2.position.y));
   }
 
-  geometry_msgs::msg::PoseStamped Move::get_waypoint(std::string waypoint){
+  std::optional<geometry_msgs::msg::PoseStamped> Move::fetch_pose(std::string room_name) {
+    if(!typedb_query_cli_->service_is_ready()){
+      return {};
+    }
+
+    auto request = std::make_shared<ros_typedb_msgs::srv::Query::Request>();
+    request->query_type = "fetch";
+    request->query = "match "
+      "$room isa room, has room-name '" + room_name + "' ;"
+      "$pose (physical_thing:$room) isa pose2d;"
+      "fetch $pose:x, y, theta;";
+
+    auto typedb_query_result_ = typedb_query_cli_->async_send_request(request);
+
+    // Wait for the result.
+    if (typedb_query_result_.wait_for(1s) != std::future_status::ready) {
+      return {};
+    }
+
+    auto result_ = typedb_query_result_.get();
+    if(!result_->success){
+      return {};
+    }
+
     geometry_msgs::msg::PoseStamped wp;
     wp.header.frame_id = "map";
     wp.header.stamp = now();
-    wp.pose.position.x = this->get_parameter(waypoint).as_double_array()[0];
-    wp.pose.position.y = this->get_parameter(waypoint).as_double_array()[1];
-    wp.pose.position.z = this->get_parameter(waypoint).as_double_array()[2];
-    wp.pose.orientation.x = this->get_parameter(waypoint).as_double_array()[3];
-    wp.pose.orientation.y = this->get_parameter(waypoint).as_double_array()[4];
-    wp.pose.orientation.z = this->get_parameter(waypoint).as_double_array()[5];
-    wp.pose.orientation.w = this->get_parameter(waypoint).as_double_array()[6];
+    for (const auto& result: result_->results) {
+      for (const auto& attribute: result.attributes) {
+        if (attribute.label == "x") {
+          wp.pose.position.x = attribute.value.double_value;
+        } else if (attribute.label == "y") {
+          wp.pose.position.y = attribute.value.double_value;
+        } else if (attribute.label == "theta") {
+          wp.pose.orientation.z = attribute.value.double_value;
+        }
+      }
+    }
     return wp;
   }
 
@@ -92,11 +121,12 @@ namespace navigation_task_plan
 
     RCLCPP_INFO(get_logger(), "Navigation action server ready");
 
-    // auto wp_to_navigate = get_waypoint(waypoint);
-
     nav2_msgs::action::NavigateToPose::Goal navigation_goal;
-    navigation_goal.pose = get_waypoint(get_arguments()[1]);
-    // geometry_msgs::msg::PoseStamped goal_pos;
+    auto pose = fetch_pose(get_arguments()[1]);
+    if (!pose.has_value()) {
+      return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::FAILURE;
+    }
+    navigation_goal.pose = pose.value();
     dist_to_move_ = getDistance(navigation_goal.pose.pose, current_pos_);
 
     auto send_goal_options =
