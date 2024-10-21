@@ -95,7 +95,7 @@ ros2 service call /rosa_kb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch'
 
 Navigation kb query:
 ```Bash
-ros2 service call /rosa_kb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch', query: 'match
+ros2 service call /ros_typedb/query ros_typedb_msgs/srv/Query "{query_type: 'fetch', query: 'match
 \$o isa object, has object-name \"cup\";
 (object:\$o, room:\$r) isa delivery-location;
 \$rg isa room, has room-name \"garage\";

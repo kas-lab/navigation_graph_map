@@ -21,6 +21,7 @@ RUN mkdir -p /navigation_ws/src
 COPY navigation_simulation /navigation_ws/src/navigation_simulation
 COPY navigation_task_plan /navigation_ws/src/navigation_task_plan
 COPY navigation_rosa /navigation_ws/src/navigation_rosa
+COPY navigation_kb /navigation_ws/src/navigation_kb
 COPY dependencies.rosinstall /navigation_ws/dependencies.rosinstall
 
 WORKDIR /navigation_ws
