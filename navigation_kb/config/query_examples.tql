@@ -45,3 +45,18 @@ $room isa room, has room-name "garage";
 $pose (physical_thing:$room) isa pose2d;
 fetch
 $pose:x, y, theta;
+
+match
+$item isa item, has item-name $item-name;
+(item:$item, room:$room) isa delivery-location;
+$room has room-name $room-name;
+fetch
+$item-name; $room-name; 
+
+match
+$item isa item, has item-name $item-name;
+(item:$item, room:$room) isa delivery-location;
+$room has room-name $room-name;
+fetch
+$item: item-name; 
+$room: room-name; 
