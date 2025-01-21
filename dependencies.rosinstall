@@ -17,6 +17,5 @@ repositories:
     version: develop
   mirte-gazebo:
     type: git
-    url: https://github.com/Rezenders/mirte-gazebo.git
-    version: develop
-
+    url: https://github.com/mklomp/mirte-gazebo.git
+    version: develop 
