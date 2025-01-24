@@ -49,7 +49,7 @@ install(DIRECTORY include/
 install(DIRECTORY
   launch
   pddl
-  config
+  # config
   DESTINATION share/${PROJECT_NAME}
 )
 
