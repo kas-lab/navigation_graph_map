@@ -2,11 +2,13 @@ insert
 
 # Architectural knowledge
 $a_move isa Action, has action-name "move";
-$f_controller isa Function, has function-name "controller";
-(action:$a_move, required-function:$f_controller) isa functional-requirement;
+$f_navigation isa Function, has function-name "controller";
+(action:$a_move, required-function:$f_navigation) isa functional-requirement;
 
 $c_controller_server isa LifeCycleNode, has component-name "controller_server", has package "nav2_controller", has executable "controller_server";
-(function: $f_controller, required-component: $c_controller_server) isa function-design, has function-design-name "fd_controller_server";
+$c_local_costmap isa LifeCycleNode, has component-name "local_costmap/local_costmap";
+
+(function: $f_navigation, required-component: $c_controller_server, required-component: $c_local_costmap) isa function-design, has function-design-name "fd_closed_arm";
 
 $cp_max_vel_x_high isa ComponentParameter, has parameter-key "FollowPath.max_vel_x", has parameter-value "0.26", has parameter-type 'double';
 $cp_max_vel_x_low isa ComponentParameter, has parameter-key "FollowPath.max_vel_x", has parameter-value "0.16", has parameter-type 'double';
@@ -23,4 +25,7 @@ $c_controller_config_low_speed (component: $c_controller_server, parameter: $cp_
 
 $qa_battery isa QualityAttribute, has attribute-name "battery";
 (constraint: $qa_battery, constrained: $c_controller_config_high_speed) isa constraint, has attribute-value 0.75, has constraint-operator ">=";
+
+
+# Footprint adaptation
 

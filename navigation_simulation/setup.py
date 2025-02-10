@@ -16,6 +16,8 @@ setup(
             glob('launch/*launch.[pxy][yma]*')),
         (os.path.join('share', package_name, 'config'),
             glob('config/*.[pxy][yma]*')),
+        (os.path.join('share', package_name, 'worlds'),
+            glob('worlds/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

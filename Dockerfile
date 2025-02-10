@@ -18,14 +18,19 @@ RUN chmod +x /install_typedb.sh
 RUN ["/bin/bash", "-c", "./install_typedb.sh"]
 
 RUN mkdir -p /navigation_ws/src
-COPY navigation_simulation /navigation_ws/src/navigation_simulation
-COPY navigation_task_plan /navigation_ws/src/navigation_task_plan
-COPY navigation_rosa /navigation_ws/src/navigation_rosa
-COPY navigation_kb /navigation_ws/src/navigation_kb
+COPY navigation_simulation /navigation_ws/src/navigation_graph_map/navigation_simulation
+COPY navigation_task_plan /navigation_ws/src/navigation_graph_map/navigation_task_plan
+COPY navigation_rosa /navigation_ws/src/navigation_graph_map/navigation_rosa
+COPY navigation_kb /navigation_ws/src/navigation_graph_map/navigation_kb
 COPY dependencies.rosinstall /navigation_ws/dependencies.rosinstall
 
 WORKDIR /navigation_ws
 RUN vcs import src < dependencies.rosinstall --recursive
+
+## Temp fix (remove it later)
+RUN rm -rf src/krr_simulation/mirte-gazebo/
+RUN rm -rf src/krr_simulation/mirte-ros-packages/
+RUN rm -rf src/krr_simulation/clearpath_mecanum_drive_controller/
 
 RUN ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash \
       && apt update \

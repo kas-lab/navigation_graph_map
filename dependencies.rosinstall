@@ -7,7 +7,7 @@ repositories:
     type: git
     url: https://github.com/kas-lab/rosa.git
     version: main
-  ros_type:
+  ros_typedb:
     type: git
     url: https://github.com/kas-lab/ros_typedb.git
     version: main
@@ -18,4 +18,12 @@ repositories:
   mirte-gazebo:
     type: git
     url: https://github.com/mklomp/mirte-gazebo.git
-    version: develop 
+    version: develop
+  mirte_navigation:
+    type: git
+    url: https://github.com/kas-lab/mirte_navigation.git
+    version: main
+  robocup_home_simulation:
+    type: git
+    url: https://github.com/kas-lab/robocup_home_simulation.git
+    version: main

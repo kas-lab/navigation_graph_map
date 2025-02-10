@@ -30,6 +30,12 @@ Start docker container:
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:ro ghcr.io/kas-lab/navigation_graph_map:main
 ```
 
+Dev option:
+
+```Bash
+docker run -it --rm -e DISPLAY=$DISPLAY -v $HOME/navigation_ws/src:/navigation_ws/src -v /tmp/.X11-unix:/tmp/.X11-unix:ro navigation
+```
+
 Then run:
 ```Bash
 ros2 launch navigation_simulation simulation.launch.py
