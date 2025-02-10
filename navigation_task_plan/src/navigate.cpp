@@ -31,7 +31,7 @@ namespace navigation_task_plan
   domain_expert_ = std::make_shared<plansys2::DomainExpertClient>();
   planner_client_ = std::make_shared<plansys2::PlannerClient>();
   problem_expert_ = std::make_shared<plansys2::ProblemExpertClient>();
-  executor_client_ = std::make_shared<plansys2::ExecutorClient>("rosa_plansys_controller_executor");
+  executor_client_ = std::make_shared<plansys2::ExecutorClient>("plansys_controller_executor");
 
   step_timer_cb_group_ = create_callback_group(
     rclcpp::CallbackGroupType::MutuallyExclusive);

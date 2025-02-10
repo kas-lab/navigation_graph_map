@@ -11,7 +11,6 @@ find_package(nav2_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(plansys2_executor REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(rosa_task_plan_plansys REQUIRED)
 find_package(ros_typedb_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -23,7 +22,6 @@ set(dependencies
   rclcpp
   plansys2_executor
   geometry_msgs
-  rosa_task_plan_plansys
   ros_typedb_msgs
 )
 
